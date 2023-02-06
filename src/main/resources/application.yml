@@ -1,1 +1,6 @@
-
+spring:
+  data:
+    mongodb:
+      database: eqimaid-api-db
+      uri: mongodb://localhost:27017
+      auto-index-creation: true
