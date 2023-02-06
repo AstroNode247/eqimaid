@@ -34,13 +34,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUid(uid);
     }
 
+    //1675674664
     @Override
     public User updateByUid(User user, Integer uid) {
         log.info("Update user : {}", uid);
         User newUser = userRepository.findByUid(uid);
+        newUser.setUid(uid);
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());
         newUser.setEntity(user.getEntity());
+        userRepository.save(newUser);
         return newUser;
     }
 

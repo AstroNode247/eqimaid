@@ -1,6 +1,5 @@
 package com.eqima.eqimaid.model;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +17,7 @@ import java.util.List;
 public class User {
     @Id
     private ObjectId id;
-
     @Indexed(unique = true)
-    @NotEmpty(message = "User id cannot be null")
     private Integer uid;
     private String firstName;
     private String lastName;
