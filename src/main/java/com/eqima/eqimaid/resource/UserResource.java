@@ -1,9 +1,13 @@
 package com.eqima.eqimaid.resource;
 
 import com.eqima.eqimaid.dto.ExistingUserDto;
+import com.eqima.eqimaid.dto.FingerprintDto;
 import com.eqima.eqimaid.dto.UserDto;
+import com.eqima.eqimaid.mapper.FingerprintMapper;
+import com.eqima.eqimaid.model.Fingerprint;
 import com.eqima.eqimaid.model.Response;
 import com.eqima.eqimaid.model.User;
+import com.eqima.eqimaid.service.FingerprintService;
 import com.eqima.eqimaid.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 
@@ -23,11 +28,12 @@ import static java.time.LocalDateTime.now;
 public class UserResource {
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final FingerprintService fingerprintService;
 
     @GetMapping
     public ResponseEntity<Response> getUsers() {
         List<UserDto> usersResponse = userService.list().stream().map(user ->
-                modelMapper.map(user, UserDto.class)).toList();
+                modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
@@ -66,6 +72,24 @@ public class UserResource {
                         .timeStamp(now())
                         .data(Map.of("user", userResponse))
                         .message("New user created")
+                        .status(HttpStatus.CREATED)
+                        .statusCode(HttpStatus.CREATED.value())
+                        .build()
+        );
+    }
+
+    @PostMapping("/{ownerId}/fingerprint")
+    public ResponseEntity<Response> addFingerprint(@PathVariable Integer ownerId,
+                                                   @RequestBody @Valid FingerprintDto fingerprintDto) {
+        Fingerprint fingerprintRequest = FingerprintMapper.mapper.toFingerprint(fingerprintDto);
+        Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId, fingerprintRequest);
+        FingerprintDto fingerprintResponse = FingerprintMapper.mapper.toFingerprintDto(ownerId, fingerprint);
+
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timeStamp(now())
+                        .data(Map.of("fingerprint", fingerprintResponse))
+                        .message("New fingerprint created added for user : " + ownerId)
                         .status(HttpStatus.CREATED)
                         .statusCode(HttpStatus.CREATED.value())
                         .build()

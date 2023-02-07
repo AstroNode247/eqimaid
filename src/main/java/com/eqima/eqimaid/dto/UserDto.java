@@ -15,5 +15,5 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String entity;
-    private List<Fingerprint> fingerprints;
+    private List<Fingerprint> fingerprintId;
 }
