@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUid(uid);
     }
 
-    //1675674664
     @Override
     public User updateByUid(User user, Integer uid) {
         log.info("Update user : {}", uid);
