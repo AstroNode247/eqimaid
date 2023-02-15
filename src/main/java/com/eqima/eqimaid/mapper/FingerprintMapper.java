@@ -15,7 +15,7 @@ public interface FingerprintMapper {
 
     @Mapping(source = "uid", target = "ownerId")
     @Mapping(source = "fingerprint.path", target = "path")
-    FingerprintDto toFingerprintDto(Integer uid, Fingerprint fingerprint);
+    FingerprintDto toFingerprintDto(String uid, Fingerprint fingerprint);
 
     @Mapping(source = "fingerprintDto.path", target = "path")
     Fingerprint toFingerprint(FingerprintDto fingerprintDto);

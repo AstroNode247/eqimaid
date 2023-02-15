@@ -19,7 +19,7 @@ public class User {
     @Id
     private ObjectId id;
     @Indexed(unique = true)
-    private Integer uid;
+    private String uid;
     private String firstName;
     private String lastName;
     private String entity;

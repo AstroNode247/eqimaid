@@ -29,7 +29,7 @@ class UserServiceTest {
     @Test
     void canCreateUser() {
         User user = new User();
-        user.setUid(99);
+        user.setUid("9");
         user.setFirstName("Makia");
         user.setLastName("Henry");
         underTest.create(user);
@@ -49,13 +49,13 @@ class UserServiceTest {
 
     @Test
     void canGetUser() {
-        Integer uid = 99;
+        String uid = "99";
         underTest.get(uid);
 
-        ArgumentCaptor<Integer> uidArgumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<String> uidArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(userRepository).findByUid(uidArgumentCaptor.capture());
 
-        Integer capturedUid = uidArgumentCaptor.getValue();
+        String capturedUid = uidArgumentCaptor.getValue();
         assertThat(capturedUid).isEqualTo(uid);
     }
 

@@ -30,12 +30,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get(Integer uid) {
+    public User get(String uid) {
         return userRepository.findByUid(uid);
     }
 
     @Override
-    public User updateByUid(User user, Integer uid) {
+    public User updateByUid(User user, String uid) {
         log.info("Update user : {}", uid);
         User newUser = userRepository.findByUid(uid);
         newUser.setUid(uid);
@@ -47,9 +47,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean delete(Integer id) {
-        log.info("Delete user : {}", id);
-        userRepository.deleteByUid(id);
+    public Boolean delete(String uid) {
+        log.info("Delete user : {}", uid);
+        userRepository.deleteByUid(uid);
         return Boolean.TRUE;
     }
 }

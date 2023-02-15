@@ -1,6 +1,7 @@
 package com.eqima.eqimaid.service;
 
 import com.eqima.eqimaid.repository.FingerprintRepository;
+import com.eqima.eqimaid.repository.UserRepository;
 import com.eqima.eqimaid.service.implementation.FingerprintServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -18,12 +19,14 @@ class FingerprintServiceTest {
     @Mock
     private FingerprintRepository fingerprintRepository;
     @Mock
+    private UserRepository userRepository;
+    @Mock
     private MongoTemplate mongoTemplate;
     private FingerprintServiceImpl underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new FingerprintServiceImpl(fingerprintRepository, mongoTemplate);
+        underTest = new FingerprintServiceImpl(fingerprintRepository, userRepository, mongoTemplate);
     }
 
     @Test

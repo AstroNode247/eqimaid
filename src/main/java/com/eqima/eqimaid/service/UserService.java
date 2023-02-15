@@ -9,7 +9,8 @@ import java.util.Collection;
 public interface UserService {
     User create(User user);
     Collection<User> list();
-    User get(Integer uid);
-    User updateByUid(User user, Integer uid);
-    Boolean delete(Integer uid);
+    User get(String uid);
+    User updateByUid(User user, String uid);
+
+    Boolean delete(String uid);
 }

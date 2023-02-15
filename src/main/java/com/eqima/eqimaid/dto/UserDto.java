@@ -11,7 +11,7 @@ import java.util.List;
 public class UserDto {
     private ObjectId id;
     @NotNull(message = "User id cannot be null")
-    private Integer uid;
+    private String uid;
     private String firstName;
     private String lastName;
     private String entity;

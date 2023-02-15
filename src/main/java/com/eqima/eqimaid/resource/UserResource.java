@@ -15,7 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +48,7 @@ public class UserResource {
     }
 
     @GetMapping("/{uid}")
-    public ResponseEntity<Response> getUser(@PathVariable Integer uid) {
+    public ResponseEntity<Response> getUser(@PathVariable String uid) {
         User user = userService.get(uid);
         UserDto userResponse = modelMapper.map(user, UserDto.class);
 
@@ -78,27 +80,43 @@ public class UserResource {
         );
     }
 
-    @PostMapping("/{ownerId}/fingerprint")
-    public ResponseEntity<Response> addFingerprint(@PathVariable Integer ownerId,
-                                                   @RequestBody @Valid FingerprintDto fingerprintDto) {
-        Fingerprint fingerprintRequest = FingerprintMapper.mapper.toFingerprint(fingerprintDto);
-        Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId, fingerprintRequest);
-        FingerprintDto fingerprintResponse = FingerprintMapper.mapper.toFingerprintDto(ownerId, fingerprint);
+//    @PostMapping("/{ownerId}/fingerprint")
+//    public ResponseEntity<Response> addFingerprint(@PathVariable String ownerId,
+//                                                   @RequestBody @Valid FingerprintDto fingerprintDto) {
+//        Fingerprint fingerprintRequest = FingerprintMapper.mapper.toFingerprint(fingerprintDto);
+//        Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId, fingerprintRequest);
+//        FingerprintDto fingerprintResponse = FingerprintMapper.mapper.toFingerprintDto(ownerId, fingerprint);
+//
+//        return ResponseEntity.ok(
+//                Response.builder()
+//                        .timeStamp(now())
+//                        .data(Map.of("fingerprint", fingerprintResponse))
+//                        .message("New fingerprint created added for user : " + ownerId)
+//                        .status(HttpStatus.CREATED)
+//                        .statusCode(HttpStatus.CREATED.value())
+//                        .build()
+//        );
+//    }
+@PostMapping("/{ownerId}/fingerprint")
+public ResponseEntity<Response> addFingerprint(@PathVariable String ownerId,
+                                               @RequestParam("image") MultipartFile file) throws IOException {
+    Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId, file);
+    FingerprintDto fingerprintResponse = FingerprintMapper.mapper.toFingerprintDto(ownerId, fingerprint);
 
-        return ResponseEntity.ok(
-                Response.builder()
-                        .timeStamp(now())
-                        .data(Map.of("fingerprint", fingerprintResponse))
-                        .message("New fingerprint created added for user : " + ownerId)
-                        .status(HttpStatus.CREATED)
-                        .statusCode(HttpStatus.CREATED.value())
-                        .build()
-        );
-    }
+    return ResponseEntity.ok(
+            Response.builder()
+                    .timeStamp(now())
+                    .data(Map.of("fingerprint", fingerprintResponse))
+                    .message("New fingerprint created added for user : " + ownerId)
+                    .status(HttpStatus.CREATED)
+                    .statusCode(HttpStatus.CREATED.value())
+                    .build()
+    );
+}
 
     @PutMapping("/{uid}")
     public ResponseEntity<Response> updateUser(@RequestBody @Valid ExistingUserDto existingUserDto,
-                                               @PathVariable Integer uid) {
+                                               @PathVariable String uid) {
         User userRequest = modelMapper.map(existingUserDto, User.class);
         User user = userService.updateByUid(userRequest, uid);
         ExistingUserDto userResponse = modelMapper.map(user, ExistingUserDto.class);
@@ -115,7 +133,7 @@ public class UserResource {
     }
 
     @DeleteMapping("/{uid}")
-    public ResponseEntity<Response> deleteUser(@PathVariable Integer uid) {
+    public ResponseEntity<Response> deleteUser(@PathVariable String uid) {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
