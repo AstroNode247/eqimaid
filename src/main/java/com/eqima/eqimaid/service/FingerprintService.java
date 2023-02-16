@@ -11,7 +11,7 @@ public interface FingerprintService {
     String uploadImage(MultipartFile file) throws IOException;
     byte[] downloadImage(String filename) throws IOException;
 
-    Fingerprint addFingerprint(String ownerId, MultipartFile file) throws IOException;
+    Fingerprint addFingerprint(String ownerId) throws IOException;
 
     Collection<Fingerprint> list();
 }

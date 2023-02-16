@@ -98,9 +98,8 @@ public class UserResource {
 //        );
 //    }
 @PostMapping("/{ownerId}/fingerprint")
-public ResponseEntity<Response> addFingerprint(@PathVariable String ownerId,
-                                               @RequestParam("image") MultipartFile file) throws IOException {
-    Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId, file);
+public ResponseEntity<Response> addFingerprint(@PathVariable String ownerId) throws IOException {
+    Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId);
     FingerprintDto fingerprintResponse = FingerprintMapper.mapper.toFingerprintDto(ownerId, fingerprint);
 
     return ResponseEntity.ok(

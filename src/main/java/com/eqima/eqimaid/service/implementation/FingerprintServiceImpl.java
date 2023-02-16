@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +32,8 @@ public class FingerprintServiceImpl implements FingerprintService {
     private final FingerprintRepository fingerprintRepository;
     private final UserRepository userRepository;
     private final MongoTemplate mongoTemplate;
-    private final String DATA_PATH = "E:/Projects/Web/eqimaid/data/";
+    private String HOME_PATH = System.getProperty("user.home") + "/fingerprint";
+    private String DATA_PATH = "E:/Projects/Web/eqimaid/data/";
 
 //    @Override
 //    public Fingerprint addFingerprint(String ownerId, Fingerprint fingerprint) {
@@ -47,23 +50,65 @@ public class FingerprintServiceImpl implements FingerprintService {
 //    }
 
     @Override
-    public Fingerprint addFingerprint(String ownerId, MultipartFile file) throws IOException {
+    public Fingerprint addFingerprint(String ownerId) throws IOException {
         log.info("Add fingerprint");
         User user = userRepository.findByUid(ownerId);
         int nbFinger = user.getFingerprintId().size();
-        String[] filename = file.getOriginalFilename().split("\\.");
-        String lastName = filename[0] + "_" + nbFinger;
 
-        String imgPath = DATA_PATH + ownerId + "/" + lastName;
-        File filePath = new File(imgPath);
-        if (!filePath.exists()) {
-            filePath.mkdirs();
+        int width = 292;
+        int height = 369;
+        BufferedImage image = null;
+        File input_file = null;
+        String orgFileName = "fingerprint.bmp";
+
+        // READ IMAGE
+        try {
+            input_file = new File(
+                    HOME_PATH + "/" + orgFileName);
+            if (!input_file.exists()) {
+                throw new RuntimeException();
+            }
+            image = new BufferedImage(
+                    width, height, BufferedImage.TYPE_INT_ARGB);
+            // Reading input file
+            image = ImageIO.read(input_file);
+            System.out.println("Reading complete.");
         }
-        file.transferTo(filePath);
+        catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+
+        String[] filename = orgFileName.split("\\.");
+        String lastFileName = filename[0] + "_" + nbFinger + ".bmp";
+        String imgPath = DATA_PATH + ownerId + "/" + lastFileName;
+        // WRITE IMAGE
+        try {
+            // Output file path
+            File output_file = new File(imgPath);
+            if (!output_file.exists()) {
+                output_file.mkdirs();
+            }
+            // Writing to file taking type and path as
+            ImageIO.write(image, "bmp", output_file);
+            System.out.println("Writing complete.");
+            input_file.delete();
+        }
+        catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+//        String[] filename = file.getOriginalFilename().split("\\.");
+//        String lastName = filename[0] + "_" + nbFinger;
+//
+//        String imgPath = DATA_PATH + ownerId + "/" + lastName;
+//        File filePath = new File(imgPath);
+//        if (!filePath.exists()) {
+//            filePath.mkdirs();
+//        }
+//        file.transferTo(filePath);
 
         Fingerprint fingerprint = fingerprintRepository.save(Fingerprint.builder()
-                .name(file.getOriginalFilename())
-                .path(setFingerprintPath(ownerId, lastName)).build());
+                .name(lastFileName)
+                .path(setFingerprintPath(ownerId, lastFileName)).build());
 
         mongoTemplate.update(User.class)
                 .matching(Criteria.where("uid").is(ownerId))
