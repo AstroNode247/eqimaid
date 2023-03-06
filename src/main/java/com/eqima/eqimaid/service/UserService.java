@@ -11,6 +11,5 @@ public interface UserService {
     Collection<User> list();
     User get(String uid);
     User updateByUid(User user, String uid);
-
     Boolean delete(String uid);
 }

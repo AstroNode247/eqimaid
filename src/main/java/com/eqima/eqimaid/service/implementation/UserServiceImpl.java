@@ -1,5 +1,7 @@
 package com.eqima.eqimaid.service.implementation;
 
+import com.eqima.eqimaid.exception.UserExistException;
+import com.eqima.eqimaid.exception.UserNotFoundException;
 import com.eqima.eqimaid.model.User;
 import com.eqima.eqimaid.repository.UserRepository;
 import com.eqima.eqimaid.service.UserService;
@@ -20,6 +22,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         log.info("Save new user : {}", user.getUid());
+        User count = userRepository.findByUid(user.getUid());
+        if (count != null) {
+            throw new UserExistException("L'identifiant de l'utilisateur existe déjà");
+        }
         return userRepository.save(user);
     }
 
@@ -31,7 +37,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(String uid) {
-        return userRepository.findByUid(uid);
+        User user = userRepository.findByUid(uid);
+        if (user == null) {
+            throw new UserNotFoundException("Cette utilisateur n'existe pas");
+        }
+        return user;
     }
 
     @Override

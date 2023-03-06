@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends MongoRepository<User, ObjectId> {
     User findByUid(String uid);
     void deleteByUid(String uid);
+    Integer getCountByUid(String uid);
+
 }
