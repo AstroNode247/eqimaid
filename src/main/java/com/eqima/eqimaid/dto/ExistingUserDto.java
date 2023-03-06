@@ -11,8 +11,5 @@ import java.util.List;
 public class ExistingUserDto {
     private ObjectId id;
     private Integer uid;
-    private String firstName;
-    private String lastName;
-    private String entity;
     private List<Fingerprint> fingerprints;
 }

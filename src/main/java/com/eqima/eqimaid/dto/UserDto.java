@@ -12,8 +12,5 @@ public class UserDto {
     private ObjectId id;
     @NotNull(message = "User id cannot be null")
     private String uid;
-    private String firstName;
-    private String lastName;
-    private String entity;
     private List<Fingerprint> fingerprintId;
 }

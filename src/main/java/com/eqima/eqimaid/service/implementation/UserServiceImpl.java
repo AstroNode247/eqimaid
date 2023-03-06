@@ -39,9 +39,6 @@ public class UserServiceImpl implements UserService {
         log.info("Update user : {}", uid);
         User newUser = userRepository.findByUid(uid);
         newUser.setUid(uid);
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-        newUser.setEntity(user.getEntity());
         userRepository.save(newUser);
         return newUser;
     }

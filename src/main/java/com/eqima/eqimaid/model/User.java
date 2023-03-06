@@ -20,9 +20,6 @@ public class User {
     private ObjectId id;
     @Indexed(unique = true)
     private String uid;
-    private String firstName;
-    private String lastName;
-    private String entity;
     @DocumentReference
     private List<Fingerprint> fingerprintId;
 }

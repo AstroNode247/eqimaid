@@ -15,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -80,26 +79,10 @@ public class UserResource {
         );
     }
 
-//    @PostMapping("/{ownerId}/fingerprint")
-//    public ResponseEntity<Response> addFingerprint(@PathVariable String ownerId,
-//                                                   @RequestBody @Valid FingerprintDto fingerprintDto) {
-//        Fingerprint fingerprintRequest = FingerprintMapper.mapper.toFingerprint(fingerprintDto);
-//        Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId, fingerprintRequest);
-//        FingerprintDto fingerprintResponse = FingerprintMapper.mapper.toFingerprintDto(ownerId, fingerprint);
-//
-//        return ResponseEntity.ok(
-//                Response.builder()
-//                        .timeStamp(now())
-//                        .data(Map.of("fingerprint", fingerprintResponse))
-//                        .message("New fingerprint created added for user : " + ownerId)
-//                        .status(HttpStatus.CREATED)
-//                        .statusCode(HttpStatus.CREATED.value())
-//                        .build()
-//        );
-//    }
 @PostMapping("/{ownerId}/fingerprint")
-public ResponseEntity<Response> addFingerprint(@PathVariable String ownerId) throws IOException {
-    Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId);
+public ResponseEntity<Response> addFingerprint(@PathVariable String ownerId, @RequestBody String filename)
+        throws IOException {
+    Fingerprint fingerprint = fingerprintService.addFingerprint(ownerId, filename);
     FingerprintDto fingerprintResponse = FingerprintMapper.mapper.toFingerprintDto(ownerId, fingerprint);
 
     return ResponseEntity.ok(
